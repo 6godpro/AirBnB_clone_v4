@@ -27,11 +27,19 @@ article {
 article h2 {
     font-size: 30px;
     display: flex;
-    text-align: center;
+    text-align: left;
     flex-direction: column;
-    margin: 0;
-    padding-bottom: 10%
-    
+    margin-bottom: 0;
+    padding-bottom: 10%;
+    width: 70%;
+}
+
+.title_box {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    width: 100%;
 }
 
 .price_by_night {
@@ -46,7 +54,7 @@ article h2 {
     justify-content: center;
     align-items: center;
     top: 5%;
-    right: 7%;
+    right: 0%;
 }
 
 .information {
