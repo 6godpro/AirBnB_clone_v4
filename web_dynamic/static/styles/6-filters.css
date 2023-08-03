@@ -43,6 +43,10 @@ section.filters > button:hover {
     font-weight: 400;
     font-size: 14px;
     margin: 0 0 5px 0;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 17px;
 }
 
 .popover {
@@ -56,10 +60,14 @@ section.filters > button:hover {
     z-index: 1;
     padding: 30px 50px 30px 0;
     margin-top: 17px;
+
+    max-height: 300px;
+    overflow-y: scroll;
 }
 
 .popover, .popover ul {
     list-style-type: none;
+    padding-inline: 0;
 }
 .locations:hover > .popover {
     display: block;

@@ -3,7 +3,12 @@ $('document').ready( function () {
   const checked = [];
   $('.amenities input[data-id]').on('click', function (event) {
     const target = event.target;
-    checked.append(target);
-    console.log(checked)
+    if (target.checked === true) {
+      checked.push(target.dataset.name);
+    } else {
+      checked.splice(checked.indexOf(target.dataset.name), 1);
+    }
+    const filter = checked.join(', ')
+    $('DIV.amenities h4').text(filter)
   });
 })
