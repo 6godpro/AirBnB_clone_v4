@@ -80,7 +80,13 @@ def search_place():
         abort(400, description="Not a JSON")
 
     if len(req) == 0:
-        return jsonify([place.to_dict() for place in all_places])
+        data = []
+        for place in all_places:
+            user = place.user
+            place_dict = place.to_dict()
+            place_dict['user'] = user.to_dict()
+            data.append(place_dict)
+        return jsonify(data)
 
     state_ids = req.get("states", None)
     city_ids = req.get("cities", None)

@@ -1,38 +1,36 @@
-$('document').ready( function () {
+$('document').ready(function () {
   // Everything goes here
   const checked = [];
   $('.amenities input[data-id]').on('click', function (event) {
     const target = event.target;
     if (target.checked === true) {
-      console.log(target.dataset.name)
       checked.push(target.dataset.name);
     } else {
       checked.splice(checked.indexOf(target.dataset.name), 1);
     }
-    const filter = checked.join(', ')
-    $('DIV.amenities h4').text(filter)
+    const filter = checked.join(', ');
+    $('DIV.amenities h4').text(filter);
   });
 
   // request the endpoint to check status
-  $.get('http://0.0.0.0:5001/api/v1/status/', (data, status) => {
-    if (data['status'] === 'OK') {
-      $('DIV#api_status').addClass('available')
-    }
-    else {
-      $('DIV#api_status').removeClass('available')
+  $.get('http://localhost:5001/api/v1/status/', (data) => {
+    if (data?.status === 'OK') {
+      $('DIV#api_status').addClass('available');
+    } else {
+      $('DIV#api_status').removeClass('available');
     }
   });
 
   $.ajax({
-    url: 'http://0.0.0.0:5001/api/v1/places_search/',
+    url: 'http://localhost:5001/api/v1/places_search/',
     type: 'POST',
     data: '{}',
     contentType: 'application/json',
     dataType: 'json',
     success: function (data) {
       $('SECTION.places').append(data.map((place) => {
-	    return `<ARTICLE>
-                  <DIV class="title">
+        return `<ARTICLE>
+                  <DIV class="title_box">
                     <H2>${place.name}</H2>
                     <DIV class="price_by_night">
                       $${place.price_by_night}
@@ -40,25 +38,23 @@ $('document').ready( function () {
                   </DIV>
                   <DIV class="information">
                     <DIV class="max_guest">
-                      <I class="fa fa-users fa-3x" aria-hidden="true"></I>
-                      <BR />
-                      ${place.max_guest} Guests
+                      ${place.max_guest} Guest${place.max_guest !== 1 ? 's' : ''}
                     </DIV>
                     <DIV class="number_rooms">
-                      <I class="fa fa-bed fa-3x" aria-hidden="true"></I>
-                      <BR />
-                      ${place.number_rooms} Bedrooms
+                      ${place.number_rooms} Bedroom${place.number_rooms !== 1 ? 's' : ''}
                     </DIV>
                     <DIV class="number_bathrooms">
-                      <I class="fa fa-bath fa-3x" aria-hidden="true"></I>
-                      <BR />
-                      ${place.number_bathrooms} Bathrooms
+                      ${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}
                     </DIV>
                   </DIV>
+                  <div class="user">
+                    <b>Owner:</b> ${place.user.first_name} ${place.user.last_name}
+                  </div>
                   <DIV class="description">
                     ${place.description}
                   </DIV>
                 </ARTICLE>`;
-		}));
-	}});
+      }));
+    }
+  });
 });
