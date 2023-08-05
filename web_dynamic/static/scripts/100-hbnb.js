@@ -9,7 +9,6 @@ $('document').ready(function () {
   });
   // the HTML content for the data
   function responseHtml (data) {
-    console.log(data);
     $('SECTION.places').html(data.map((place) => {
       return `<ARTICLE>
                 <DIV class="title_box">
