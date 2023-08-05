@@ -87,7 +87,9 @@ def search_place():
             place_dict = place.to_dict()
             place_dict['user'] = user.to_dict()
             new_data.append(place_dict)
-        return new_data
+        # result is sorted using the place name
+        _dict = {_dict['name']: _dict for _dict in new_data}
+        return [place[1] for place in sorted(_dict.items())]
 
     # if no request data was sent
     if len(req) == 0:
@@ -119,14 +121,14 @@ def search_place():
     places_filtered = set(places_in_cities)
 
     if not amenity_ids:
-        return jsonify([place.to_dict() for place in places_filtered])
+        return jsonify(add_user_dict(places_filtered))
 
     if len(places_filtered) == 0 and not state_ids and not city_ids:
         new_places = filter_places_by_amenity(all_places, amenity_ids)
         return jsonify(add_user_dict(new_places))
 
     new_places = filter_places_by_amenity(places_filtered, amenity_ids)
-    return jsonify([place.to_dict() for place in new_places])
+    return jsonify(add_user_dict(new_places))
 
 
 def filter_places_by_amenity(places, amenity_ids):
