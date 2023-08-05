@@ -79,15 +79,21 @@ def search_place():
     if req is None:
         abort(400, description="Not a JSON")
 
-    if len(req) == 0:
-        data = []
-        for place in all_places:
+    # adding the user dictionary for each place to the response json
+    def add_user_dict(data):
+        new_data = []
+        for place in data:
             user = place.user
             place_dict = place.to_dict()
             place_dict['user'] = user.to_dict()
-            data.append(place_dict)
-        return jsonify(data)
+            new_data.append(place_dict)
+        return new_data
 
+    # if no request data was sent
+    if len(req) == 0:
+        return jsonify(add_user_dict(all_places))
+
+    # if request data was sent
     state_ids = req.get("states", None)
     city_ids = req.get("cities", None)
     amenity_ids = req.get("amenities", None)
@@ -117,7 +123,7 @@ def search_place():
 
     if len(places_filtered) == 0 and not state_ids and not city_ids:
         new_places = filter_places_by_amenity(all_places, amenity_ids)
-        return jsonify([place.to_dict() for place in new_places])
+        return jsonify(add_user_dict(new_places))
 
     new_places = filter_places_by_amenity(places_filtered, amenity_ids)
     return jsonify([place.to_dict() for place in new_places])

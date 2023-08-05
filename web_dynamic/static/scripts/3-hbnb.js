@@ -13,7 +13,7 @@ $('document').ready(function () {
   });
 
   // request the endpoint to check status
-  $.get('http://localhost:5001/api/v1/status/', (data) => {
+  $.get('http://0.0.0.0:5001/api/v1/status/', (data) => {
     if (data?.status === 'OK') {
       $('DIV#api_status').addClass('available');
     } else {
@@ -22,7 +22,7 @@ $('document').ready(function () {
   });
 
   $.ajax({
-    url: 'http://localhost:5001/api/v1/places_search/',
+    url: 'http://0.0.0.0:5001/api/v1/places_search/',
     type: 'POST',
     data: '{}',
     contentType: 'application/json',
