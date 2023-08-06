@@ -9,6 +9,7 @@ $('document').ready(function () {
     });
     // the HTML content for the data
     function responseHtml (data) {
+      console.log(data[0].reviews)
       $('SECTION.places').html(data.map((place) => {
         return `<ARTICLE>
                   <DIV class="title_box">
@@ -34,6 +35,17 @@ $('document').ready(function () {
                   <DIV class="description">
                     ${place.description}
                   </DIV>
+                  <div class="reviews">
+                    <div class="title">
+                        <h2>2 Reviews</h2><span>show</span>
+                    </div>
+                    <ul>
+                      <li>
+                          <h3>From Chiamaka 22nd May 2023</h3>
+                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas ratione.</p>
+                      </li>
+                    </ul>
+                  </div>
                 </ARTICLE>`;
       }));
     }

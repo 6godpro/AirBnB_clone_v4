@@ -98,7 +98,33 @@ article h2 {
 .user {
     margin: 10px auto;
 }
-
+section.places div.reviews{
+    margin-top: 40px;
+}
+section.places div.reviews .title{
+    border-bottom: 1px solid #DDDDDD;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    /* background-color: aliceblue; */
+}
+section.places div.reviews h3{
+    font-size: 14px;
+    text-align: left;
+}
+section.places div.reviews li{
+    margin-bottom: 10px;
+}
+.title h2 {
+    font-size: 16px;
+    margin: 0;
+    display: inline-block;
+    /* background-color: red; */
+}
+.title span {
+    text-decoration: underline;
+    color: red;
+}
 /*
 justify-content
 align-items

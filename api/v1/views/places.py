@@ -80,20 +80,25 @@ def search_place():
         abort(400, description="Not a JSON")
 
     # adding the user dictionary for each place to the response json
-    def add_user_dict(data):
+    def update_places_dict(data):
         new_data = []
         for place in data:
+            print(f'line 85 {type(place.reviews)}')
             user = place.user
             place_dict = place.to_dict()
             place_dict['user'] = user.to_dict()
+            place_dict['reviews'] = [{**review.to_dict(),
+                                    'user': review.user.name}
+                                    for review in place.reviews]
             new_data.append(place_dict)
         # result is sorted using the place name
         _dict = {_dict['name']: _dict for _dict in new_data}
         return [place[1] for place in sorted(_dict.items())]
 
+    print(all_places)
     # if no request data was sent
     if len(req) == 0:
-        return jsonify(add_user_dict(all_places))
+        return jsonify(update_places_dict(all_places))
 
     # if request data was sent
     state_ids = req.get("states", None)
@@ -121,14 +126,14 @@ def search_place():
     places_filtered = set(places_in_cities)
 
     if not amenity_ids:
-        return jsonify(add_user_dict(places_filtered))
+        return jsonify(update_places_dict(places_filtered))
 
     if len(places_filtered) == 0 and not state_ids and not city_ids:
         new_places = filter_places_by_amenity(all_places, amenity_ids)
-        return jsonify(add_user_dict(new_places))
+        return jsonify(update_places_dict(new_places))
 
     new_places = filter_places_by_amenity(places_filtered, amenity_ids)
-    return jsonify(add_user_dict(new_places))
+    return jsonify(update_places_dict(new_places))
 
 
 def filter_places_by_amenity(places, amenity_ids):
