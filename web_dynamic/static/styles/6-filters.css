@@ -100,3 +100,8 @@ section.filters > button:hover {
 .popover::-webkit-scrollbar {
     display: none;
 }
+
+.locations > .popover h2 input,
+.locations > .popover ul li ul input {
+    margin-right: 10px;
+}
