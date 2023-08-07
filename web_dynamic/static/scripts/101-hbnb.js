@@ -47,7 +47,7 @@ $('document').ready(function () {
                       <h2>
                         ${place.reviews.length} Review${place.reviews !== 1 ? 's' : ''}
                       </h2>
-                      <span data-id="${place.id} onclick='${(event) => console.log('line 50:', event)}'">show</span>
+                      <span data-id="${place.id}">show</span>
                   </div>
                   <ul>
                     ${storeReview(place.id, place.reviews)}
@@ -60,10 +60,11 @@ $('document').ready(function () {
               </ARTICLE>`;
     }));
   }
-  $('section.places').delegate('div.title', 'click', function () {
+  $('section.places').click('div.title span', function () {
     show = !show;
     // console.log(show)
     const placeId = $('div.title span').attr('data-id');
+    // console.log(placeId)
     const reviews = placesReview[placeId];
     // console.log(reviews)
     if (show) {
