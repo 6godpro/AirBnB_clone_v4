@@ -7,6 +7,14 @@ $('document').ready(function () {
       $('DIV#api_status').removeClass('available');
     }
   });
+  // reviews state
+  let show = false;
+  const placesReview = {};
+
+  function storeReview (placeId, reviews) {
+    placesReview[placeId] = reviews;
+  }
+
   // the HTML content for the data
   function responseHtml (data) {
     $('SECTION.places').html(data.map((place) => {
@@ -34,9 +42,45 @@ $('document').ready(function () {
                 <DIV class="description">
                   ${place.description}
                 </DIV>
+                <div class="reviews">
+                  <div class="title">
+                      <h2>
+                        ${place.reviews.length} Review${place.reviews !== 1 ? 's' : ''}
+                      </h2>
+                      <span data-id="${place.id} onclick='${(event) => console.log('line 50:', event)}'">show</span>
+                  </div>
+                  <ul>
+                    ${storeReview(place.id, place.reviews)}
+                    <li>
+                        <h3>From Chiamaka 22nd May 2023</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas ratione.</p>
+                    </li>
+                  </ul>
+                </div>
               </ARTICLE>`;
     }));
   }
+  $('section.places').delegate('div.title', 'click', function () {
+    show = !show;
+    // console.log(show)
+    const placeId = $('div.title span').attr('data-id');
+    const reviews = placesReview[placeId];
+    // console.log(reviews)
+    if (show) {
+      $('div.reviews ul').html(reviews.map((review) => {
+        return `<li>
+                    <h3>
+                      From ${review.user.first_name} ${review.user.last_name} ${review.created_at}
+                    </h3>
+                    <p>${review.text}</p>
+                </li>`;
+      }));
+      $('div.title span').text('hide');
+    } else {
+      $('div.reviews ul').html('');
+      $('div.title span').text('show');
+    }
+  });
   // initial loading of page, show all places
   $.ajax({
     url: 'http://localhost:5001/api/v1/places_search/',
