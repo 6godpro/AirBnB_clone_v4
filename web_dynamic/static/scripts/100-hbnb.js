@@ -48,7 +48,7 @@ $('document').ready(function () {
   });
 
   const amenities = {};
-  $('.amenities input[data-id]').click(function() {
+  $('.amenities input[data-id]').click(function () {
     if ($(this).is(':checked')) {
       amenities[$(this).attr('data-id')] = $(this).attr('data-name');
     } else {
@@ -57,31 +57,31 @@ $('document').ready(function () {
     $('DIV.amenities h4').text(Object.values(amenities).join(', '));
   });
 
-  let states = {}
-  $('DIV.locations ul h2 input[data-id]').click(function() {
+  const states = {};
+  $('DIV.locations ul h2 input[data-id]').click(function () {
     if ($(this).is(':checked')) {
       states[$(this).attr('data-id')] = $(this).attr('data-name');
     } else {
       delete states[$(this).attr('data-id')];
     }
-    let locations = Object.assign({}, states, cities)
+    const locations = Object.assign({}, states, cities);
     $('.locations h4').text(Object.values(locations).join(', '));
   });
 
-  let cities = {}
-  $('DIV.locations ul ul li input[data-id]').click(function() {
+  const cities = {};
+  $('DIV.locations ul ul li input[data-id]').click(function () {
     if ($(this).is(':checked')) {
       cities[$(this).attr('data-id')] = $(this).attr('data-name');
     } else {
       delete cities[$(this).attr('data-id')];
     }
-    let locations = Object.assign({}, states, cities)
+    const locations = Object.assign({}, states, cities);
     $('.locations h4').text(Object.values(locations).join(', '));
   });
 
   $('section.filters button').click(function () {
     const requestData = {};
-    filters = Object.assign({}, amenities, cities, states);
+    const filters = Object.assign({}, amenities, cities, states);
     if (Object.keys(filters).length > 0) {
       requestData.amenities = Object.keys(amenities);
       requestData.states = Object.keys(states);

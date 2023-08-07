@@ -12,6 +12,8 @@ from models.place import Place
 from models.state import State
 from models.city import City
 from models.user import User
+from datetime import datetime
+strftime = datetime.strftime
 
 
 @app_views.route("/cities/<city_id>/places",
@@ -79,23 +81,43 @@ def search_place():
     if req is None:
         abort(400, description="Not a JSON")
 
+    # format time for reviews, especially the suffix
+    def get_time(date):
+        day = date.strftime('%d')
+        suffixes = {
+            1: 'st',
+            2: 'nd',
+            3: 'rd'
+        }
+        suffix = suffixes.get(day, 'th')
+        return date.strftime(f'%d{suffix} %B %Y')
+
     # adding the user dictionary for each place to the response json
     def update_places_dict(data):
         new_data = []
         for place in data:
-            print(f'line 85 {type(place.reviews)}')
             user = place.user
             place_dict = place.to_dict()
             place_dict['user'] = user.to_dict()
-            place_dict['reviews'] = [{**review.to_dict(),
-                                    'user': review.user.name}
-                                    for review in place.reviews]
+            reviews = []
+            for review in place.reviews:
+                review_dict = review.to_dict()
+                review_dict['created_at'] = get_time(review.created_at)
+                review_dict['user'] = review.user.to_dict()
+                reviews.append(review_dict)
+            place_dict['reviews'] = reviews
+            # place_dict['reviews'] = [{**review.to_dict(),
+            #                         'created_at': review.user
+            #                                             .created_at
+            #                                             .datetime
+            #                                             .strftime('%-d %B %Y'),
+            #                         'user': review.user.to_dict()}
+            #                         for review in place.reviews]
             new_data.append(place_dict)
         # result is sorted using the place name
         _dict = {_dict['name']: _dict for _dict in new_data}
         return [place[1] for place in sorted(_dict.items())]
 
-    print(all_places)
     # if no request data was sent
     if len(req) == 0:
         return jsonify(update_places_dict(all_places))
