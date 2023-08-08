@@ -8,17 +8,22 @@ $('document').ready(function () {
     }
   });
   // reviews state
-  let show = false;
   const placesReview = {};
 
   function storeReview (placeId, reviews) {
-    placesReview[placeId] = reviews;
+    // isolate the show value by placeId
+    placesReview[placeId] = {};
+    const reviewState = {};
+    reviewState.show = false;
+    reviewState.reviews = reviews;
+    placesReview[placeId] = reviewState;
   }
 
   // the HTML content for the data
   function responseHtml (data) {
-    $('SECTION.places').html(data.map((place) => {
-      return `<ARTICLE>
+    $('section.places').append(data.map((place) => {
+      storeReview(place.id, place.reviews);
+      return `<article>
                 <DIV class="title_box">
                   <H2>${place.name}</H2>
                   <DIV class="price_by_night">
@@ -49,26 +54,19 @@ $('document').ready(function () {
                       </h2>
                       <span data-id="${place.id}">show</span>
                   </div>
-                  <ul>
-                    ${storeReview(place.id, place.reviews)}
-                    <li>
-                        <h3>From Chiamaka 22nd May 2023</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas ratione.</p>
-                    </li>
+                  <ul data-id="${place.id}">
                   </ul>
                 </div>
-              </ARTICLE>`;
+              </article>`;
     }));
   }
-  $('section.places').click('div.title span', function () {
-    show = !show;
-    // console.log(show)
-    const placeId = $('div.title span').attr('data-id');
-    // console.log(placeId)
-    const reviews = placesReview[placeId];
-    // console.log(reviews)
-    if (show) {
-      $('div.reviews ul').html(reviews.map((review) => {
+
+  $('section.places').on('click', 'span', function (event) {
+    const placeId = $(this).attr('data-id');
+    placesReview[placeId].show = !placesReview[placeId].show;
+    const reviews = placesReview[placeId].reviews;
+    if (placesReview[placeId].show) {
+      $(`section.places ul[data-id=${placeId}]`).append(reviews.map((review) => {
         return `<li>
                     <h3>
                       From ${review.user.first_name} ${review.user.last_name} ${review.created_at}
@@ -76,12 +74,13 @@ $('document').ready(function () {
                     <p>${review.text}</p>
                 </li>`;
       }));
-      $('div.title span').text('hide');
+      $(this).text('hide');
     } else {
-      $('div.reviews ul').html('');
-      $('div.title span').text('show');
+      $(`section.places ul[data-id=${placeId}]`).html('');
+      $(this).text('show');
     }
   });
+
   // initial loading of page, show all places
   $.ajax({
     url: 'http://localhost:5001/api/v1/places_search/',
